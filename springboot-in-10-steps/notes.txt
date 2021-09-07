@@ -39,4 +39,20 @@ now type /actuator in Edit Headers text box
  
  
 http://localhost:8080/books => Few hardcoded books
- 
+
+
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = { SpringTestConfiguration.class })
+public class GreetingsSpringTest {
+    // ...
+}
+If we want to migrate this test to JUnit5 we need to replace the @RunWith annotation with the new @ExtendWith:
+
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes = { SpringTestConfiguration.class })
+public class GreetingsSpringTest {
+    // ...
+}
+The SpringExtension class is provided by Spring 5 and integrates the Spring TestContext Framework into JUnit 5. The @ExtendWith annotation accepts any class that implements the Extension interface.
+
