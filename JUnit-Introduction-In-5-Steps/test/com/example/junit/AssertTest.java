@@ -1,4 +1,4 @@
-package com.in28minutes.junit;
+package com.example.junit;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
