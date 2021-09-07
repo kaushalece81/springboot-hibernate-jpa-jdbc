@@ -1,0 +1,42 @@
+## Spring Boot
+actuator URL
+in springboot 1.x
+http://localhost:8080/actuator
+in springboot early 2.x
+http://localhost:8080/application
+in springboot 2.5.4 back to previous one
+http://localhost:8080/actuator
+
+Installing the HAL Browser
+==============================
+The setup for the HAL browser is remarkably easy when building a REST API with Spring. 
+As long as we have the dependency "spring-data-rest-hal-explorer", Spring will auto-configure the browser, 
+and make it available via the default endpoint.
+All we need to do now open new browser. 
+The HAL browser will then be available on http://localhost:8080/ 
+now type /actuator in Edit Headers text box
+
+### Goals
+- Enable building production ready applications quickly
+- Provide common non-functional features 
+  - embedded servers
+  - metrics
+  - health checks
+  - externalized configuration
+
+### What Spring Boot is NOT!
+- ZERO code generation
+- Neither an application server nor a web server
+
+### Features
+- Quick Starter Projects with Auto Configuration
+   - Web
+   - JPA
+- Embedded Servers - Tomcat, Jetty or Undertow
+- Production-ready features
+   - metrics and health checks 
+   - externalized configuration
+ 
+ 
+http://localhost:8080/books => Few hardcoded books
+ 
