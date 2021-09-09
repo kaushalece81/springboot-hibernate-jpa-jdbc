@@ -4,9 +4,6 @@ You can find the database name and URL from the console log.
 
 RECOMMENDED: 
 Make the database URL a constant by configuring this in application.properties.
-#since spring boot 2.4.1. spring.data.jpa.repositories.bootstrap-mode has been reverted to default 
-# before spring boot 2.4.1. spring.data.jpa.repositories.bootstrap-mode 
-# was having default value deferred hence below properties has to be set
 
 spring.datasource.url=jdbc:h2:mem:testdb
 spring.data.jpa.repositories.bootstrap-mode=default
@@ -14,7 +11,7 @@ spring.data.jpa.repositories.bootstrap-mode=default
 Note : 
  spring.data.jpa.repositories.bootstrap-mode has been reverted to default 
  since spring boot 2.4.1.
- 
+
 
 #enable h2 console in application.properties
 spring.h2.console.enabled=true
@@ -61,4 +58,10 @@ basic script-based initialization with that of Flyway and Liquibase. If you want
 populate a schema created by Hibernate, set spring.jpa.defer-datasource-initialization to true. 
 While mixing database initialization technologies is not recommended, this will also allow you to use 
 a schema.sql script to build upon a Hibernate-created schema before it’s populated via data.sql.
- 
+
+https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-2.3-Release-Notes#bootstrapmode-for-jpa-repositories
+Unique DataSource Name By Default
+By default, a unique name is generated on startup for the auto-configured DataSource. This impacts the use of the H2 console as the database URL no longer refers to testdb.
+
+You can disable this behavior by setting 
+spring.datasource.generate-unique-name to false.

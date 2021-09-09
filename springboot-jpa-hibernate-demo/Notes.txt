@@ -1,0 +1,11 @@
+Always use  single quote in data.sql
+Junit links
+https://github.com/in28minutes/in28minutes-initiatives/blob/master/The-in28Minutes-TroubleshootingGuide-And-FAQ/junit5.md
+https://github.com/in28minutes/in28minutes-initiatives/blob/master/The-in28Minutes-TroubleshootingGuide-And-FAQ/images/junit5-changes.png
+
+
+should use @Transactional in repository class to allow delete
+org.springframework.dao.InvalidDataAccessApiUsageException: No EntityManager with actual
+ transaction available for current thread - cannot reliably process 'remove' call; 
+ nested exception is javax.persistence.TransactionRequiredException: No EntityManager
+  with actual transaction available for current thread - cannot reliably process 'remove' call

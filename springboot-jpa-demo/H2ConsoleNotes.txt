@@ -8,6 +8,10 @@ Make the database URL a constant by configuring this in application.properties.
 spring.datasource.url=jdbc:h2:mem:testdb
 spring.data.jpa.repositories.bootstrap-mode=default
 
+Note : 
+ spring.data.jpa.repositories.bootstrap-mode has been reverted to default 
+ since spring boot 2.4.1.
+
 #enable h2 console in application.properties
 spring.h2.console.enabled=true
 #access h2 console in browser  http://localhost:8080/h2-console/
