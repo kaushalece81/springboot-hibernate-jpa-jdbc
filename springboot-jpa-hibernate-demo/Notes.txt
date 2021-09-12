@@ -9,3 +9,51 @@ org.springframework.dao.InvalidDataAccessApiUsageException: No EntityManager wit
  transaction available for current thread - cannot reliably process 'remove' call; 
  nested exception is javax.persistence.TransactionRequiredException: No EntityManager
   with actual transaction available for current thread - cannot reliably process 'remove' call
+  
+  JPQL Java Persistence Query Langauage 
+  JPQL is a way of writing queries using entities
+  eg.
+  SQL Query : SELECT * FROM Course;
+  JPQL : Select c from Course c;
+  Note: here c is alias and Course in JPQL is entity name
+  
+  @Table -- To define name of table  its used when entity name and table are different.
+  example
+  Entity name is Course and Table name is course_details
+  
+  @Entity
+  @Table(name="CourseDetails")
+  public class Course
+  
+  		@Column(name = "fullname" , nullable = false, length = 15)
+	private String name;
+	Hibernate specific annotation for tracking timestamp
+	==========================================
+	org.hibernate.annotations.UpdateTimestamp;
+	@UpdateTimestamp
+	private LocalDateTime lastUpdatedDate;
+	org.hibernate.annotations.CreationTimestamp;
+	@CreationTimestamp
+	private LocalDateTime createdDate;
+	
+	
+@NamedQuery(name = "query_get_all_courses" , query = "Select c from Course c")
+@NamedQuery(name = "query_get_100_steps_courses" , query = "Select c from Course c where name like '%100 Steps%'")
+//Note @NamedQuery is @Repeatable(NamedQueries.class).
+Earlier @NamedQuery was non repeatable hence we have to use @NamedQueries
+If we use both annotation[@NamedQuery & @NamedQueries] together then we get blow error
+The repeatable annotation @NamedQuery may not be repeated where its container annotation type @NamedQueries is also used directly
+
+Define multiple queries using @NamedQueries
+@NamedQueries(value = {
+@NamedQuery(name = "query_get_all_courses" , query = "Select c from Course c"),
+@NamedQuery(name = "query_get_100_steps_courses" , query = "Select c from Course c where name like '%100 Steps%'")
+})
+
+
+// There is no way to mass update in one go using JPA using native queries only we can do
+//In jpa we need to get each row and we need to update row by row 
+
+@DirtiesContext  annotation is used in unit test to make sure database remains in 
+consistent state as it was before executing the testcase. So that over all all testcase passes
+with bothering about order of execution of test

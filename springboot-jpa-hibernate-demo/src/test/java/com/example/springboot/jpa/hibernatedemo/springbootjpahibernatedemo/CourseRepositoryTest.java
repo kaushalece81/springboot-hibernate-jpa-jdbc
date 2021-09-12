@@ -13,19 +13,19 @@ import com.example.springboot.jpa.hibernatedemo.springbootjpahibernatedemo.entit
 @SpringBootTest
 class CourseRepositoryTest {
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(CourseRepositoryTest.class);
+
 	@Autowired
 	private CourseRepository courseRepository;
 
 	@Test
-	void testFindCourseById() {
+	void findCourseById() {
 		Course findCourseById = courseRepository.findCourseById(10001);
 		assertEquals("JPA in 10 Steps", findCourseById.getName(), "Passed");
 		
 	}
 	
 	@Test
-	void testDeleteCourseById() {
+	void deleteCourseById() {
 		courseRepository.deleteCourseById(10003);
 		Course findCourseById = courseRepository.findCourseById(10003);
 		assertNull(findCourseById);
@@ -33,7 +33,7 @@ class CourseRepositoryTest {
 	}
 	
 	@Test
-	void testSaveCourse() {
+	void saveCourse() {
 		String name = "Microservice in 15 steps";
 		Course course= new Course(name);
 		 Course saveOrUpdate = courseRepository.saveOrUpdate(course);
@@ -42,7 +42,7 @@ class CourseRepositoryTest {
 	}
 	
 	@Test
-	void testUpdateCourse() {
+	void updateCourse() {
 		String name = "Hibernate in 10 Steps";
 		String updatedName = "Hibernate in 10 Steps Updated";
 		Course course = courseRepository.findCourseById(10002);
@@ -52,5 +52,35 @@ class CourseRepositoryTest {
 		assertEquals(updatedName, updateCourse.getName(), "Passed");
 		
 	}
+	@Test
+	void playWithEntityManager() {
+		courseRepository.playWithEntityManager();
+	}
+	
+	@Test
+	void playWithEntityManagerWithFlush() {
+		courseRepository.playWithEntityManagerWithFlush();
+	}
+	
+	@Test
+	void playWithEntityManagerWithDetachOneCourse() {
+		courseRepository.playWithEntityManagerWithDetachOneCourse();
+	}
+	
+	@Test
+	void playWithEntityManagerWithDetachBothCourse() {
+		courseRepository.playWithEntityManagerWithDetachBothCourse();
+	}
+	
+	@Test
+	void playWithEntityManagerWithDetachUsingClear() {
+		courseRepository.playWithEntityManagerWithDetachUsingClear();
+	}
+	
+	@Test
+	void playWithEntityManagerWithRefresh() {
+		courseRepository.playWithEntityManagerWithRefresh();
+	}
+	
 
 }
