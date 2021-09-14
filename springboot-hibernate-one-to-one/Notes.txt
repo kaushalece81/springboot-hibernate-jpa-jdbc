@@ -1,0 +1,118 @@
+entity: course,student,passport,review
+
+course can be subscribed by multiple students. 
+Also one student subscribe to multiple course
+
+course can have multiple reviews. Many to one relationship
+But one review is associated with single course
+
+student can have only one passport. one to one relationship
+But passport belong to only one student. one to one relationship
+
+
+In ONE TO ONE MAPPING is by default eager fetch and not an lazy fetch
+=======================================================
+First try using 
+@OneToOne
+private Passport passport;
+
+Even though we do not fetch student passport details 
+still join of both table student and passport happens
+To make it lazy we should use in Student entity
+@OneToOne(fetch = FetchType.LAZY)
+private Passport passport;
+
+Error when @OneToOne(fetch = FetchType.LAZY) solution use @Transactional at method level
+org.hibernate.LazyInitializationException: could not initialize proxy
+ [com.example.springboothibernateonetoonemapping.entity.Passport#40001] 
+ - no Session
+ 
+ 
+ // Session & SessionFactory
+// EntityManager & PersistenceContext
+// What should happen if any of the 4 db operation fails 
+// whole transaction should fail of till what it is successful that should be saved in db
+// Ideally either everything should succeed or nothing should succeed
+whenever we define @Transactional it will create PersistenceContext 
+where all entities are getting saved
+
+
+
+ONETOONE Bidirectional relationship student and passport
+========================================================
+We are able to fetch passport using student entity as we have defined below in student
+public class Student {
+@OneToOne(fetch = FetchType.LAZY)
+//@OneToOne
+private Passport passport;
+
+but we cannot get student associated with passport . 
+To have this we need to have onetoone mapping defined in passport also
+public class Passport {
+@OneToOne(fetch = FetchType.LAZY)
+	private Student student;
+
+But this will cause to have passport_id column student table 
+student_id in passport table which is duplicate which is not good
+We should either make either student or passport as owning side 
+not both student and passport as owning side of the relationship
+
+To make student as owning side of the relationship
+=====================================================
+Always define mappedBy in non owning side of relationship eg Here Passport entity we defined 
+define mappedBy = "passport" in passport entity. 
+Here passport is name of variable in Student class
+public class Passport {
+	@OneToOne(fetch = FetchType.LAZY, mappedBy = "passport")
+	private Student student;
+	
+	
+// this will make student as owning side of relationship
+//@OneToOne(fetch = FetchType.LAZY, mappedBy = "passport")  
+// this will make student and passport both as owning side of relationship
+//@OneToOne(fetch = FetchType.LAZY)
+
+When does Hibernate send updates to the database?
+===================================================
+What happens in transaction?
+Unit testing -> repository --> entity manager
+Unit testing --> entity manager
+
+@Transactional
+void saveMethodWithChange(){  // transaction starts here
+//create Objects
+em.persist(user1)  // here only sequence is generated & id is assigned and user1 not saved in db
+em.persist(user2) // here only sequence is generated & id is assigned and user2 not saved in db
+
+//update Objects
+Change User1 // user1 changes are tracked by persistence context but not saved in db
+Change User2  //// user2 changes are tracked by persistence context but not saved in db
+} // transaction ends here. Now all changes are saved to database
+
+if we use em.flush() // then changes will be pushed to database
+But hibernate manages even if we use flush() and any fail happens after that
+it will rollback all changes to db
+
+Hibernate waits till last moment before persisting data changes in db 
+
+ When do we need @Transactional in an Unit Test?
+ =================================================
+ If we need to changes anything in db using JPA in unit test then we need to be with in the scope of transaction
+ if we use enity manager in unit test then we should use @Transactional at method level
+ Do read only methods need a transaction?
+ ===========================================
+
+ List<Comment> someReadOnlyMethod(){
+User user=em.find(User.class,1L);// this line succeeds as we used entity manager which ends after execution
+//below line will throw error we should be within the transaction get data from db
+// as we are not using entity manager but instead we are using here relation one to many
+// with other entity here hence we need to be within transaction scope hence use @Transactional
+List<Comment> comments =user.getComments();
+return comments ;
+}
+
+why do we use @DirtiesContext in unit testcase?
+=================================================
+@DirtiesContext  annotation is used in unit test to make sure database remains in 
+consistent state as it was before executing the testcase. So that over all all testcase passes
+with bothering about order of execution of test

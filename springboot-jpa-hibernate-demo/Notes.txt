@@ -54,6 +54,3 @@ Define multiple queries using @NamedQueries
 // There is no way to mass update in one go using JPA using native queries only we can do
 //In jpa we need to get each row and we need to update row by row 
 
-@DirtiesContext  annotation is used in unit test to make sure database remains in 
-consistent state as it was before executing the testcase. So that over all all testcase passes
-with bothering about order of execution of test
