@@ -1,0 +1,55 @@
+entity: course,student,passport,review
+
+multiple courses can be enrolled by multiple students . Many to many relationship
+
+In MANY TO Many MAPPING is by default always lazy fetch and not an eager fetch
+==============================================================================
+Here third table is needed without that not possible
+
+if both entity define only @ManyToMany annotation without mappedBy
+then 2 different tables will be created
+1. COURSE_STUDENTS  column COURSE_ID STUDENTS_ID  
+2. STUDENT_COURSES  column name STUDENT_ID COURSES_ID 
+Note plural in table name and column nameNote plural in table name and column name
+If we use mappedBy then only one table will be created then one side will be owning side 
+lets consider student is owning side Hence mappedBy defined in course
+After mappedBy
+==============
+Only one table STUDENT_COURSES and 
+column name STUDENTS_ID COURSES_ID 
+Note plural in table name and column name still there
+
+How to remove plural in table name and column name
+====================================================
+we need to use  @JoinTable it should be defined in owning side of relationship student entity
+here we need to define 
+//Join table name STUDENT_COURSE
+//joinColumn name STUDENT_ID
+//inverseJoinColumn name COURSE_ID
+
+After using  @JoinTable ,joinColumns , inverseJoinColumns
+Table name STUDENT_COURSE  column STUDENT_ID COURSE_ID 
+
+
+Easy to remember
+======================
+***ToOne is always Eager Fetching
+***ToMANY us always Lazy fetching
+
+	In course entity
+	========================
+	//@ManyToMany(mappedBy="courses")
+	@ManyToMany
+	//@JsonIgnore
+	private List<Student> students = new ArrayList<>();
+	
+	
+	In student entity
+	========================
+	@ManyToMany
+	//@JoinTable(name = "STUDENT_COURSE", joinColumns = @JoinColumn(name = "STUDENT_ID"), inverseJoinColumns = @JoinColumn(name = "COURSE_ID"))
+	// If we do not give join table then table name has plural and one of column name is plural 
+	//joinColumn STUDENT_ID
+	//inverseJoinColumn COURSE_ID
+	private List<Course> courses = new ArrayList<>();
+	

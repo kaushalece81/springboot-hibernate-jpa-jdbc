@@ -1,0 +1,27 @@
+entity: course,student,passport,review
+
+course can have multiple reviews . One to many relationship
+But one review can  belong to only one course
+Multiple reviews can belong to one course  Many to one relationship
+
+In ONE TO Many MAPPING is by default always lazy fetch and not an eager fetch
+==============================================================================
+
+In MANY TOONE MAPPING is by default always Eager fetch and not an lazy fetch
+==============================================================================
+
+Easy to rember
+***ToOne is always Eager Fetching
+***ToMANY us always Lazy fetching
+
+	In course entity
+	// one course has many reviews
+	//Since course in non owning side of relationship hence we defined here
+	@OneToMany(mappedBy = "course")
+	private List<Review> reviews = new ArrayList<>();
+	
+	In review entity
+	
+	//Many reviews can belong to one course
+	@ManyToOne
+	private Course course;
