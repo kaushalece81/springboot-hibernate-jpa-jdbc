@@ -1,0 +1,119 @@
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+If want only single table to have part time employee and full time employee
+
+Additional column inserted 
+DTYPE  Distinguisher Type
+If want to give proper name "EmployeeType" of column for DTYPE column created in table use
+annotation @DiscriminatorColumn(name = "EmployeeType")
+
+
+/** A single table per class hierarchy. */
+    SINGLE_TABLE, 
+
+    /** A table per concrete entity class. */
+    TABLE_PER_CLASS, 
+
+    /** 
+     * A strategy in which fields that are specific to a 
+     * subclass are mapped to a separate table than the fields 
+     * that are common to the parent class, and a join is 
+     * performed to instantiate the subclass.
+     */
+    JOINED 
+
+
+For Table per class change the strategy in Employee class
+ InheritanceType.SINGLE_TABLE) -->InheritanceType.TABLE_PER_CLASS
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@DiscriminatorColumn(name = "EmployeeType")   this annotation not required here
+
+Now two tables will be created
+FULL_TIME_EMPLOYEE 
+PART_TIME_EMPLOYEE 
+Union was used to retrieve data from both tables
+
+But problem here is common columns [ID and Name ]are getting repeated in both tables
+=============================================================================
+PART_TIME_EMPLOYEE
+ID  	NAME  	HOURLY_WAGE  
+1	Jill	50
+
+FULL_TIME_EMPLOYEE		
+ID  	NAME  	SALARY  
+2	Jack	10008
+
+To solve this problem we should use strategy type JOINED 
+In this case we have 3 tables 
+EMPLOYEE : ID, NAME
+PART_TIME_EMPLOYEE : HOURLY_WAGE
+FULL_TIME_EMPLOYEE:  SALARY
+
+EMPLOYEE;	
+ID  	NAME  
+1	Jill
+2	Jack
+
+
+FULL_TIME_EMPLOYEE;	
+SALARY  	ID  
+10008	2
+
+
+PART_TIME_EMPLOYEE;	
+HOURLY_WAGE  	ID  
+50	1
+
+
+========================@MappedSuperClas===============================================================
+No need to change any query whether we are using 
+SINGLE_TABLE strategy
+TABLE_PER_CLASS
+JOINED
+
+query renamed same 
+@NamedQuery(name="find_all_employees", query = "select e from Employee e")
+
+But if we are using @MappedSuperClass annotation then query will change
+as Employee is no more Entity
+comment //@Inheritance(strategy = InheritanceType.JOINED) & //@Entity
+use  @MappedSuperClass in Employee class
+ *MappedSuperClass  Designates a class whose mapping information is applied 
+ * to the entities that inherit from it. A mapped superclass 
+ * has no separate table defined for it.
+
+when we start application without changing query it says QuerySyntaxException : Employee is not mapped as its no more entity
+so we have to query separately for part time employee and full time employee 
+
+Also we need to modify dao class
+
+comment below
+/* public List<Employee> findAllEmployee() {
+		 TypedQuery<Employee> createNamedQuery = em.createNamedQuery("find_all_employees",Employee.class);
+		List<Employee> resultList = createNamedQuery.getResultList();
+		return resultList;
+	}
+*/
+
+	public List<PartTimeEmployee> findAllEmployee() {
+		 TypedQuery<PartTimeEmployee> createNamedQuery = em.createNamedQuery("find_all_part_time_employees",PartTimeEmployee.class);
+		List<PartTimeEmployee> resultList = createNamedQuery.getResultList();
+		return resultList;
+	}
+	
+Also in Main class 
+//	LOGGER.info("List of Employees --> {}", employeeRepository.findAllEmployee());
+LOGGER.info("List of Employees --> {}", employeeRepository.findAllPartTimeEmployee());
+LOGGER.info("List of Employees --> {}", employeeRepository.findAllFullTimeEmployee());
+
+
+How to choose which one to use.
+=================================
+1.If we are concerned more about data integrity & data quality 
+then we should choose JOINED because here Common things are in separate Employee table
+and specific fields are in separate table so no redundancy here.
+ All columns can be nullable and no chance of bad data here
+
+2. If you are worried about performance then SINGLE_TABLE is best to choose
+but it effects data integrity and data quality and many nullable columns
+
+

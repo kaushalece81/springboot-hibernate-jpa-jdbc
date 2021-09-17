@@ -1,0 +1,81 @@
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+If want only single table to have part time employee and full time employee
+
+Additional column inserted 
+DTYPE  Distinguisher Type
+If want to give proper name "EmployeeType" of column for DTYPE column created in table use
+annotation @DiscriminatorColumn(name = "EmployeeType")
+
+
+/** A single table per class hierarchy. */
+    SINGLE_TABLE, 
+
+    /** A table per concrete entity class. */
+    TABLE_PER_CLASS, 
+
+    /** 
+     * A strategy in which fields that are specific to a 
+     * subclass are mapped to a separate table than the fields 
+     * that are common to the parent class, and a join is 
+     * performed to instantiate the subclass.
+     */
+    JOINED 
+
+
+For Table per class change the strategy in Employee class
+ InheritanceType.SINGLE_TABLE) -->InheritanceType.TABLE_PER_CLASS
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@DiscriminatorColumn(name = "EmployeeType")   this annotation not required here
+
+Now two tables will be created
+FULL_TIME_EMPLOYEE 
+PART_TIME_EMPLOYEE 
+Union was used to retrieve data from both tables
+
+But problem here is common columns [ID and Name ]are getting repeated in both tables
+=============================================================================
+PART_TIME_EMPLOYEE
+ID  	NAME  	HOURLY_WAGE  
+1	Jill	50
+
+FULL_TIME_EMPLOYEE		
+ID  	NAME  	SALARY  
+2	Jack	10008
+
+To solve this problem we should use strategy type JOINED 
+In this case we have 3 tables 
+EMPLOYEE : ID, NAME
+PART_TIME_EMPLOYEE : HOURLY_WAGE
+FULL_TIME_EMPLOYEE:  SALARY
+
+EMPLOYEE;	
+ID  	NAME  
+1	Jill
+2	Jack
+
+
+FULL_TIME_EMPLOYEE;	
+SALARY  	ID  
+10008	2
+
+
+PART_TIME_EMPLOYEE;	
+HOURLY_WAGE  	ID  
+50	1
+
+Note :: 
+No need to change any query whether we are using 
+=======================================================
+SINGLE_TABLE strategy
+TABLE_PER_CLASS
+JOINED
+
+query renamed same 
+@NamedQuery(name="find_all_employees", query = "select e from Employee e")
+
+But if we are using @MappedSuperClass annotation then query will change
+as Employee is no more Entity
+
+
+
+

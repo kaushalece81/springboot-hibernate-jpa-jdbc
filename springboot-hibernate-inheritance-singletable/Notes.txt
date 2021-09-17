@@ -1,0 +1,7 @@
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+If want only single table to have part time employee and full time employee
+
+Additional column inserted 
+DTYPE  Distinguisher Type
+If want to give proper name "EmployeeType" of column for DTYPE column created in table use
+annotation @DiscriminatorColumn(name = "EmployeeType")
